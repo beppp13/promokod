@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fffaf1">
+    <title>PROmok0d — промокоды и скидки</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container header-inner">
+        <a class="brand" href="#">
+            <span class="brand-mark">%</span>
+            <span>PRO<span class="brand-accent">mok0d</span></span>
+        </a>
+        <a class="header-link" href="#quality">О качестве промокодов ↗</a>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="container hero-inner">
+            <div class="hero-copy">
+                <span class="eyebrow">● СКИДКИ, КОТОРЫЕ РАБОТАЮТ</span>
+                <h1>Находи выгоду.<br><span>Плати меньше.</span></h1>
+                <p>Собрали промокоды и специальные предложения в одном месте. Выбирай, копируй и экономь.</p>
+                <div class="hero-note">✦ Проверяй промокоды вместе с сообществом</div>
+            </div>
+
+            <div class="hero-art">
+                <div class="art-circle"></div>
+                <div class="ticket ticket-back">SALE <b>−20%</b></div>
+                <div class="ticket ticket-front">
+                    <span>ТВОЯ ВЫГОДА</span>
+                    <strong>−30%</strong>
+                    <small>ПРОМОКОД ВНУТРИ</small>
+                </div>
+                <span class="art-spark spark-one">✦</span>
+                <span class="art-spark spark-two">✧</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="catalog-section container" id="catalog">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">КАТАЛОГ</span>
+                <h2>Подходящие предложения</h2>
+                <p>Выбери категорию или найди промокод по названию.</p>
+            </div>
+            <div class="catalog-total">
+                <strong id="catalogCount">0</strong>
+                <span>предложений</span>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <label class="search-box">
+                <span class="search-icon">⌕</span>
+                <input id="search" type="search" placeholder="Поиск по названию или промокоду...">
+            </label>
+
+            <label class="sort-box">
+                <span>Сортировка</span>
+                <select id="sortSelect">
+                    <option value="default">По умолчанию</option>
+                    <option value="popular">Сначала популярные</option>
+                    <option value="working">Сначала работающие</option>
+                    <option value="alphabet">По названию</option>
+                </select>
+            </label>
+        </div>
+
+        <nav class="category-list">
+            <button class="category-btn active" data-category="Все">Все предложения</button>
+            <button class="category-btn" data-category="Рестораны">Рестораны</button>
+            <button class="category-btn" data-category="Магазины">Магазины</button>
+            <button class="category-btn" data-category="Электроника">Электроника</button>
+            <button class="category-btn" data-category="Аптеки">Аптеки</button>
+        </nav>
+
+        <div class="view-tabs">
+            <button class="view-tab active" data-view="all">Все промокоды</button>
+            <button class="view-tab" data-view="favorites">♡ Избранное <span id="favoritesCount">0</span></button>
+        </div>
+
+        <div class="results-line">
+            <span id="resultsLabel">Все промокоды</span>
+            <span id="resultsCount">0 найдено</span>
+        </div>
+
+        <div class="coupon-grid" id="couponGrid"></div>
+
+        <div class="empty-state hidden" id="empty">
+            <div class="empty-icon">⌕</div>
+            <h3>Ничего не найдено</h3>
+            <p>Попробуй изменить запрос или выбрать другую категорию.</p>
+            <button class="text-button" id="resetFilters">Сбросить фильтры</button>
+        </div>
+    </section>
+
+    <section class="quality-section" id="quality">
+        <div class="container quality-inner">
+            <div class="quality-copy">
+                <span class="eyebrow">ДОВЕРИЕ И ПРОВЕРКА</span>
+                <h2>Помогаем находить<br><span>рабочие промокоды</span></h2>
+                <p>Пользователи могут отмечать, сработал ли промокод. Так проще понять, какие предложения ещё актуальны.</p>
+            </div>
+
+            <div class="quality-stats">
+                <div class="stat-card">
+                    <span class="stat-icon">✦</span>
+                    <strong id="activeCount">0</strong>
+                    <small>активных предложений</small>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">▤</span>
+                    <strong id="votesCount">0</strong>
+                    <small>голосов пользователей</small>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">⚑</span>
+                    <strong id="reportsCount">0</strong>
+                    <small>сообщений об ошибках</small>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <a class="brand footer-brand" href="#">
+            <span class="brand-mark">%</span>
+            <span>PRO<span class="brand-accent">mok0d</span></span>
+        </a>
+        <span>Находи скидки и покупай выгоднее.</span>
+        <button class="footer-report" id="footerReport">Сообщить об ошибке</button>
+        <small>© 2026 PROmok0d</small>
+    </div>
+</footer>
+
+<!-- Окно промокода -->
+<dialog class="modal" id="couponDialog">
+    <button class="modal-close" type="button" data-close="couponDialog">×</button>
+
+    <div class="modal-content">
+        <span class="modal-kicker" id="detailCategory">ПРОМОКОД</span>
+        <h2 id="detailTitle">Название промокода</h2>
+        <p class="detail-description" id="detailDescription"></p>
+
+        <div class="detail-code-wrap">
+            <div>
+                <small>ТВОЙ ПРОМОКОД</small>
+                <strong id="detailCode"></strong>
+            </div>
+            <button class="primary-btn" id="detailCopy">Копировать</button>
+        </div>
+
+        <div class="vote-section">
+            <div class="vote-heading">
+                <strong>Проверил промокод?</strong>
+                <span>Помоги другим пользователям</span>
+            </div>
+
+            <div class="vote-buttons">
+                <button class="vote-btn works" id="voteWorks">
+                    ✓ Работает <b id="worksCount">0</b>
+                </button>
+                <button class="vote-btn fails" id="voteFails">
+                    × Не работает <b id="failsCount">0</b>
+                </button>
+            </div>
+
+            <p class="vote-message" id="voteMessage">Твой голос поможет другим пользователям!</p>
+        </div>
+
+        <button class="favorite-detail" id="favoriteToggle">♡ Добавить в избранное</button>
+    </div>
+</dialog>
+
+<!-- Окно жалобы -->
+<dialog class="modal report-modal" id="reportDialog">
+    <button class="modal-close" type="button" data-close="reportDialog">×</button>
+
+    <div class="modal-content">
+        <span class="modal-kicker">ОБРАТНАЯ СВЯЗЬ</span>
+        <h2>Сообщить об ошибке</h2>
+        <p class="detail-description">Нашёл нерабочий промокод или заметил неточность? Напиши об этом.</p>
+
+        <form id="reportForm">
+            <label class="form-label">
+                Промокод или название
+                <input id="reportCoupon" type="text" placeholder="Например, WELCOME10">
+            </label>
+
+            <label class="form-label">
+                Что случилось?
+                <select id="reportType" required>
+                    <option value="Промокод не работает">Промокод не работает</option>
+                    <option value="Истёк срок действия">Истёк срок действия</option>
+                    <option value="Неверные условия">Неверные условия</option>
+                    <option value="Другая ошибка">Другая ошибка</option>
+                </select>
+            </label>
+
+            <label class="form-label">
+                Комментарий
+                <textarea id="reportComment" rows="3" placeholder="Дополнительная информация"></textarea>
+            </label>
+
+            <button class="primary-btn submit-report" type="submit">Отправить сообщение</button>
+            <p class="form-success hidden" id="reportSuccess">Спасибо! Сообщение сохранено.</p>
+        </form>
+    </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

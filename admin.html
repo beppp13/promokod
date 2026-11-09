@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель PROmokod</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #fffaf1;
+            color: #49351f;
+        }
+        .container { max-width: 1100px; margin: auto; }
+        h1 { color: #936d37; }
+        .form, .coupon {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #f0dfc2;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 7px 0;
+            border: 1px solid #d8c5a5;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+        button {
+            padding: 10px 16px;
+            margin: 5px 5px 5px 0;
+            border: 0;
+            border-radius: 7px;
+            background: #936d37;
+            color: white;
+            cursor: pointer;
+        }
+        button.delete { background: #b94b3c; }
+        button.edit { background: #66845d; }
+        .coupon { display: flex; justify-content: space-between; gap: 15px; }
+        .coupon p { margin: 7px 0; }
+        @media(max-width: 600px) {
+            body { padding: 15px; }
+            .coupon { display: block; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Админ-панель PROmokod</h1>
+    <p>Управление промокодами сайта</p>
+
+    <div class="form">
+        <h2 id="formTitle">Добавить промокод</h2>
+
+        <input id="title" placeholder="Название акции">
+        <input id="code" placeholder="Промокод">
+        <input id="cat" placeholder="Категория">
+
+        <select id="status">
+            <option value="active">Активный</option>
+            <option value="expired">Истёк</option>
+            <option value="limited">Ограниченный</option>
+        </select>
+
+        <textarea id="desc" placeholder="Описание акции"></textarea>
+
+        <button onclick="saveCoupon()">Сохранить</button>
+        <button onclick="resetForm()">Отмена</button>
+    </div>
+
+    <h2>Список промокодов</h2>
+    <div id="coupons">Загрузка...</div>
+</div>
+
+<script>
+let editingId = null;
+
+async function loadCoupons() {
+    const response = await fetch('/api/coupons');
+    const coupons = await response.json();
+
+    document.getElementById('coupons').innerHTML = coupons.map(c => `
+        <div class="coupon">
+            <div>
+                <h3>${escapeHTML(c.title)}</h3>
+                <p><b>Код:</b> ${escapeHTML(c.code)}</p>
+                <p><b>Категория:</b> ${escapeHTML(c.cat)}</p>
+                <p><b>Статус:</b> ${escapeHTML(c.status)}</p>
+                <p>${escapeHTML(c.desc || '')}</p>
+            </div>
+            <div>
+                <button class="edit" onclick="editCoupon(${c.id})">Изменить</button>
+                <button class="delete" onclick="deleteCoupon(${c.id})">Удалить</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;',
+        '"': '&quot;', "'": '&#39;'
+    })[char]);
+}
+
+async function saveCoupon() {
+    const data = {
+        title: document.getElementById('title').value.trim(),
+        code: document.getElementById('code').value.trim(),
+        cat: document.getElementById('cat').value.trim(),
+        status: document.getElementById('status').value,
+        desc: document.getElementById('desc').value.trim()
+    };
+
+    if (!data.title || !data.code || !data.cat || !data.desc) {
+        alert('Заполни все поля!');
+        return;
+    }
+
+    const url = editingId
+        ? `/api/coupons/${editingId}`
+        : '/api/coupons';
+
+    const response = await fetch(url, {
+        method: editingId ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        alert('Не удалось сохранить промокод');
+        return;
+    }
+
+    resetForm();
+    loadCoupons();
+    alert('Промокод сохранён!');
+}
+
+async function editCoupon(id) {
+    const response = await fetch('/api/coupons');
+    const coupons = await response.json();
+    const c = coupons.find(item => item.id === id);
+
+    if (!c) return;
+
+    editingId = id;
+    document.getElementById('formTitle').textContent = 'Изменить промокод';
+    document.getElementById('title').value = c.title;
+    document.getElementById('code').value = c.code;
+    document.getElementById('cat').value = c.cat;
+    document.getElementById('status').value = c.status;
+    document.getElementById('desc').value = c.desc || '';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function deleteCoupon(id) {
+    if (!confirm('Точно удалить этот промокод?')) return;
+
+    const response = await fetch(`/api/coupons/${id}`, {
+        method: 'DELETE'
+    });
+
+    if (!response.ok) {
+        alert('Не удалось удалить промокод');
+        return;
+    }
+
+    loadCoupons();
+}
+
+function resetForm() {
+    editingId = null;
+    document.getElementById('formTitle').textContent = 'Добавить промокод';
+    document.getElementById('title').value = '';
+    document.getElementById('code').value = '';
+    document.getElementById('cat').value = '';
+    document.getElementById('status').value = 'active';
+    document.getElementById('desc').value = '';
+}
+
+loadCoupons();
+</script>
+</body>
+</html>
